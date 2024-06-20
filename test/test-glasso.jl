@@ -32,8 +32,8 @@ end
     s = cov(df)
 
     gs = glasso(s, nobs, 0.1)
-    @test isposdef(gs.W)
-    @test isposdef(gs.θ)
+    @test all(eigvals(gs.W) .> 0)
+    @test all(eigvals(gs.θ) .> 0)
 end
 
 @testset "large tuning parameter" begin
