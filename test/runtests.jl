@@ -1,4 +1,4 @@
 using GraphicalLasso
-using Test
+using Test, Statistics
 
 include("./test-glasso.jl")
