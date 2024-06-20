@@ -28,9 +28,8 @@ end
     Random.seed!(1234)
 
     nobs = 200
-    unscaleddf = randn(nobs, 10)
-    df = unscaleddf ./ std(unscaleddf, dims=1)
-    s = df' * df / nobs
+    df = randn(nobs, 5)
+    s = cov(df)
 
     gs = glasso(s, nobs, 0.1)
     @test isposdef(gs.W)
@@ -42,10 +41,8 @@ end
     Random.seed!(1234)
 
     nobs = 200
-    unscaleddf = randn(nobs, 10)
-    df = unscaleddf ./ std(unscaleddf, dims=1)
-
-    s = df' * df / nobs
+    df = randn(nobs, 10)
+    s = cov(df)
 
     λ = 8e10
 
