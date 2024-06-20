@@ -3,6 +3,8 @@ module GraphicalLasso
 using Statistics
 using LinearAlgebra
 
-# Write your package code here.
+include("./glasso.jl")
+export softthresh, loglik, edges, bic, offdiag
+export cdlasso, glasso
 
 end

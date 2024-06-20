@@ -1,5 +1,6 @@
-softhresh(x, λ) = sign.(x) .* max.(abs.(x) .- λ, 0)
-loglike(s, θ, rho) = logdet(θ) - tr(s * θ) - sum(abs.(s * rho))
+
+softthresh(x, λ) = sign.(x) .* max.(abs.(x) .- λ, 0)
+loglik(s, θ, rho) = logdet(θ) - tr(s * θ) - sum(abs.(s * rho))
 edges(x, thr) = sum(abs.(x) .> thr)
 bic(θ, ll, nobs, thr) = -2 * ll + log(nobs) * edges(θ, thr)
 offdiag(x, p) = [x[i, j] for i in 1:p for j in 1:p if i != j]
@@ -20,7 +21,7 @@ function cdlasso(
 
         for j in 1:p
             r_j = s12[j] - W11[1:end.!=j, j]' * β[1:end.!=j]
-            β[j] = softhresh(r_j, λ) / W11[j, j]
+            β[j] = softthresh(r_j, λ) / W11[j, j]
         end
 
         # Check for convergence
@@ -69,7 +70,7 @@ function glasso(
     end
 
     θ = inv(W)
-    ll = loglike(s, θ, W)
+    ll = loglik(s, θ, W)
     bicval = bic(θ, ll, nobs, tol)
 
     return (; W, θ, ll, bicval)
