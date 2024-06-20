@@ -13,7 +13,7 @@ end
 
 @testset "off diagonal average" begin
     a = [2 1 1; 1 2 1; 1 1 2]
-    @test mean(offdiag(a, 3)) ≈ 1.0
+    @test mean(offdiag(a)) ≈ 1.0
 end
 
 @testset "counting edges" begin
