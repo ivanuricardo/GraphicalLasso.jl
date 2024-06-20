@@ -50,7 +50,7 @@ end
     λ = 8e10
 
     gs = glasso(s, nobs, λ)
-    od = offdiag(gs.θ, 10)
+    od = offdiag(gs.θ)
     @test od ≈ zeros(90)
 end
 
