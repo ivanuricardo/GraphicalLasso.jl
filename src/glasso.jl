@@ -102,9 +102,18 @@ function tuningselect(
     kwargs...
 )
 
+    sortedλ = sort(λ)
+    W, θ, ll, bicval = glasso(s, obs, sortedλ[1]; kwargs...)
+    bicvec = fill(NaN, length(λ))
+    bicvec[1] = bicval
 
-    W, θ, ll, bicval = glasso(s, obs, λ[1]; kwargs...)
+    for i in 2:length(λ)
+        W, θ, ll, bicval = glasso(s, obs, sortedλ[i]; kwargs...)
+        bicvec[i] = bicval
+    end
 
+    lowestidx = argmin(bicvec)
+    return sortedλ[lowestidx]
 
 end
 

@@ -5,7 +5,7 @@ using LinearAlgebra
 using Random
 
 include("./glasso.jl")
-export softthresh, loglik, countedges, bic, offdiag
-export cdlasso, glasso
+export softthresh, critfunc, countedges, bic, offdiag
+export cdlasso, glasso, tuningselect
 
 end
