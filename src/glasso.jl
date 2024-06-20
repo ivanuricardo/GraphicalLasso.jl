@@ -1,8 +1,8 @@
 
 softthresh(x, λ) = sign.(x) .* max.(abs.(x) .- λ, 0)
 countedges(x, thr) = sum(abs.(x) .> thr)
-bic(θ, ll, nobs, thr) = -2 * ll + log(nobs) * countedges(θ, thr)
-offdiag(x, p) = [x[i, j] for i in 1:p for j in 1:p if i != j]
+bic(θ, ll, obs, thr) = -2 * ll + (log(obs) * countedges(θ, thr)) / obs
+offdiag(x) = x[findall(!iszero, ones(size(x)) - I)]
 
 function critfunc(s, θ, rho; penalizediag=true)
     ψ = copy(θ)
@@ -19,7 +19,7 @@ function cdlasso(
     s12::Vector{T},
     λ::Real;
     max_iter::Int=100,
-    tol::T=1e-3) where {T<:Real}
+    tol::T=1e-5) where {T<:Real}
 
     p = length(s12)
     β = zeros(p)
@@ -28,7 +28,8 @@ function cdlasso(
         β_old = copy(β)
 
         for j in 1:p
-            r_j = s12[j] - W11[1:end.!=j, j]' * β[1:end.!=j]
+            idx = setdiff(1:p, j)
+            r_j = s12[j] - W11[idx, j]' * β[idx]
             β[j] = softthresh(r_j, λ) / W11[j, j]
         end
 
@@ -41,23 +42,13 @@ function cdlasso(
     return β
 end
 
-# using LinearAlgebra, Statistics, Random
-# Random.seed!(1234)
-# nobs = 200
-# df = randn(nobs, 10)
-# s = df' * df / nobs
-# λ = 0.3
-# penalizediag = true
-# tol = 1e-3
-# maxiter = 100
-
 # Function to perform graphical lasso
 function glasso(
     s::Matrix{Float64},
-    nobs::Int,
+    obs::Int,
     λ::Real;
     penalizediag::Bool=true,
-    tol::Float64=0.001,
+    tol::Float64=1e-05,
     maxiter::Int=100)
 
     p = size(s, 1)
@@ -74,7 +65,7 @@ function glasso(
             W11 = W[idx, idx]
             s12 = s[idx, j]
 
-            # solve the lasso problem for β̂
+            # solve the lasso problem for βhat
             βhat = cdlasso(W11, s12, λ; max_iter=maxiter, tol=tol)
 
             # Update W
@@ -82,16 +73,15 @@ function glasso(
             W[j, idx] = W[idx, j]'
         end
 
-        # Check for convergence
-        if mean(abs.(offdiag(W - W_old, p))) < tol
+        if mean(abs.(offdiag(W - W_old))) < tol
             @info "glasso converged with $niter iterations."
             break
         end
     end
 
     θ = inv(W)
-    ll = -(nobs / 2) * critfunc(s, θ, W; penalizediag)
-    bicval = bic(θ, ll, nobs, 1e-06)
+    ll = -(obs / 2) * critfunc(s, θ, W; penalizediag)
+    bicval = bic(θ, ll, obs, 1e-06)
 
     return (; W, θ, ll, bicval)
 end

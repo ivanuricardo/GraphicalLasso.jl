@@ -28,9 +28,66 @@ end
     Random.seed!(1234)
 
     nobs = 200
-    df = randn(nobs, 10)
+    unscaleddf = randn(nobs, 10)
+    df = unscaleddf ./ std(unscaleddf, dims=1)
     s = df' * df / nobs
 
     gs = glasso(s, nobs, 0.1)
     @test isposdef(gs.W)
+    @test isposdef(gs.θ)
+end
+
+@testset "large tuning parameter" begin
+    using Random
+    Random.seed!(1234)
+
+    nobs = 200
+    unscaleddf = randn(nobs, 10)
+    df = unscaleddf ./ std(unscaleddf, dims=1)
+
+    s = df' * df / nobs
+
+    λ = 8e10
+
+    gs = glasso(s, nobs, λ)
+    od = offdiag(gs.θ, 10)
+    @test od ≈ zeros(90)
+end
+
+@testset "CD Lasso yields least squares solution" begin
+    using Random
+    Random.seed!(1234)
+
+    nobs = 500
+    X = randn(nobs, 10)
+
+    trueβ = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+    y = X * trueβ + 0.1 * randn(nobs)
+    unmeanX = X .- mean(X, dims=1)
+    stdX = unmeanX ./ std(X, dims=1)
+
+    lsβ = inv(stdX' * stdX) * stdX' * y
+    λ = 0.0
+    cdlassoβ = cdlasso(stdX' * stdX, stdX' * y, λ; tol=1e-5)
+
+    @test cdlassoβ ≈ lsβ
+end
+
+@testset "CD Lasso yields correct number of zeros" begin
+    using Random
+    Random.seed!(1234)
+
+    nobs = 20
+    X = randn(nobs, 10)
+
+    trueβ = [0.0, 2.0, 0.0, 4.0, 0.0, 6.0, 0.0, 8.0, 0.0, 10.0]
+    y = X * trueβ + 0.1 * randn(nobs)
+    unmeanX = X .- mean(X, dims=1)
+    stdX = unmeanX ./ std(X, dims=1)
+
+    λ = 1.3
+    cdlassoβ = cdlasso(stdX' * stdX, stdX' * y, λ; tol=1e-5)
+    numedges = countedges(cdlassoβ, 1e-10)
+
+    @test numedges ≈ 5
 end
