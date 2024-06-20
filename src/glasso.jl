@@ -1,9 +1,17 @@
 
 softthresh(x, λ) = sign.(x) .* max.(abs.(x) .- λ, 0)
-loglik(s, θ, rho) = logdet(θ) - tr(s * θ) - sum(abs.(s * rho))
-edges(x, thr) = sum(abs.(x) .> thr)
-bic(θ, ll, nobs, thr) = -2 * ll + log(nobs) * edges(θ, thr)
+countedges(x, thr) = sum(abs.(x) .> thr)
+bic(θ, ll, nobs, thr) = -2 * ll + log(nobs) * countedges(θ, thr)
 offdiag(x, p) = [x[i, j] for i in 1:p for j in 1:p if i != j]
+
+function critfunc(s, θ, rho; penalizediag=true)
+    ψ = copy(θ)
+    if !penalizediag
+        ψ[diagind(ψ)] .= 0
+    end
+    crit = -logdet(θ) + tr(s * θ) + sum(abs.(rho * ψ))
+    return crit
+end
 
 # Function to perform coordinate descent for lasso regression
 function cdlasso(
@@ -11,7 +19,7 @@ function cdlasso(
     s12::Vector{T},
     λ::Real;
     max_iter::Int=100,
-    tol::T=1e-4) where {T<:Real}
+    tol::T=1e-3) where {T<:Real}
 
     p = length(s12)
     β = zeros(p)
@@ -33,15 +41,27 @@ function cdlasso(
     return β
 end
 
+using LinearAlgebra, Statistics, Random
+Random.seed!(1234)
+nobs = 200
+df = randn(nobs, 10)
+s = df' * df / nobs
+λ = 0.3
+penalizediag = true
+tol = 1e-3
+maxiter = 100
+
 # Function to perform graphical lasso
 function glasso(
     s::Matrix{Float64},
     nobs::Int,
     λ::Real;
+    penalizediag::Bool=true,
     tol::Float64=0.001,
     maxiter::Int=100)
+
     p = size(s, 1)
-    W = s + λ * I
+    W = copy(s) + (penalizediag ? λ * I : zero(s))
 
     niter = 0
     for _ in 1:maxiter
@@ -70,8 +90,8 @@ function glasso(
     end
 
     θ = inv(W)
-    ll = loglik(s, θ, W)
-    bicval = bic(θ, ll, nobs, tol)
+    ll = -(nobs / 2) * critfunc(s, θ, W; penalizediag)
+    bicval = bic(θ, ll, nobs, 1e-06)
 
     return (; W, θ, ll, bicval)
 end

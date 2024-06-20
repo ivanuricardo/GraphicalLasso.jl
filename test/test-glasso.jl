@@ -15,3 +15,10 @@ end
     a = [2 1 1; 1 2 1; 1 1 2]
     @test mean(offdiag(a, 3)) ≈ 1.0
 end
+
+@testset "counting edges" begin
+
+    a = [1 2 3; 4 5 6; 7 8 9]
+    a[diagind(a)] .= 0
+    @test countedges(a, 1e-10) ≈ 6
+end
