@@ -1,0 +1,13 @@
+name = "GraphicalLasso"
+uuid = "ec280fb4-098f-495a-9118-f266479a1c55"
+authors = ["Ivan Ricardo <iu.ricardo@maastrichtuniversity.nl> and contributors"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
