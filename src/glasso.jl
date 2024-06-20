@@ -41,15 +41,15 @@ function cdlasso(
     return β
 end
 
-using LinearAlgebra, Statistics, Random
-Random.seed!(1234)
-nobs = 200
-df = randn(nobs, 10)
-s = df' * df / nobs
-λ = 0.3
-penalizediag = true
-tol = 1e-3
-maxiter = 100
+# using LinearAlgebra, Statistics, Random
+# Random.seed!(1234)
+# nobs = 200
+# df = randn(nobs, 10)
+# s = df' * df / nobs
+# λ = 0.3
+# penalizediag = true
+# tol = 1e-3
+# maxiter = 100
 
 # Function to perform graphical lasso
 function glasso(

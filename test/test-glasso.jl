@@ -22,3 +22,15 @@ end
     a[diagind(a)] .= 0
     @test countedges(a, 1e-10) ≈ 6
 end
+
+@testset "positive definite result" begin
+    using Random
+    Random.seed!(1234)
+
+    nobs = 200
+    df = randn(nobs, 10)
+    s = df' * df / nobs
+
+    gs = glasso(s, nobs, 0.1)
+    @test isposdef(gs.W)
+end
