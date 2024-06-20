@@ -50,10 +50,16 @@ function glasso(
     penalizediag::Bool=true,
     tol::Float64=1e-05,
     verbose::Bool=true,
-    maxiter::Int=100)
+    maxiter::Int=100,
+    winit::Matrix{Float64}=zeros(size(s)),
+)
 
     p = size(s, 1)
-    W = copy(s) + (penalizediag ? λ * I : zero(s))
+    if winit == zeros(size(s))
+        W = copy(s) + (penalizediag ? λ * I : zero(s))
+    else
+        W = copy(winit)
+    end
 
     niter = 0
     for _ in 1:maxiter
@@ -88,4 +94,18 @@ function glasso(
 
     return (; W, θ, ll, bicval)
 end
+
+function tuningselect(
+    s::Matrix{Float64},
+    obs::Int,
+    λ::AbstractVector;
+    kwargs...
+)
+
+
+    W, θ, ll, bicval = glasso(s, obs, λ[1]; kwargs...)
+
+
+end
+
 
