@@ -49,6 +49,7 @@ function glasso(
     λ::Real;
     penalizediag::Bool=true,
     tol::Float64=1e-05,
+    verbose::Bool=true,
     maxiter::Int=100)
 
     p = size(s, 1)
@@ -74,7 +75,9 @@ function glasso(
         end
 
         if mean(abs.(offdiag(W - W_old))) < tol
-            @info "glasso converged with $niter iterations."
+            if verbose
+                @info "glasso converged with $niter iterations."
+            end
             break
         end
     end
