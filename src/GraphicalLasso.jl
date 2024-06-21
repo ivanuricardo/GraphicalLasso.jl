@@ -7,6 +7,6 @@ using Distributions
 
 include("./glasso.jl")
 export softthresh, critfunc, countedges, bic, offdiag, randsparsecov
-export cdlasso, glasso, tuningselect
+export cdlasso, glasso, tuningselect, iscov
 
 end

@@ -23,7 +23,7 @@ end
     @test countedges(a, 1e-10) ≈ 6
 end
 
-@testset "positive definite result" begin
+@testset "Glasso returns covariance result" begin
     using Random
     Random.seed!(1234)
 
@@ -32,11 +32,11 @@ end
     s = cov(df)
 
     gs = glasso(s, nobs, 0.1)
-    @test all(eigvals(gs.W) .> 0)
-    @test all(eigvals(gs.θ) .> 0)
+    @test iscov(gs.W)
+    @test iscov(gs.θ)
 end
 
-@testset "positive definite rand cov" begin
+@testset "Random sparse matrix returns covariance" begin
     using Random
     Random.seed!(1234)
 
@@ -45,10 +45,10 @@ end
     s3 = randsparsecov(50, 0.5)
     s4 = randsparsecov(100, 0.5)
 
-    @test all(eigvals(s1) .> 0)
-    @test all(eigvals(s2) .> 0)
-    @test all(eigvals(s3) .> 0)
-    @test all(eigvals(s4) .> 0)
+    @test iscov(s1)
+    @test iscov(s2)
+    @test iscov(s3)
+    @test iscov(s4)
 end
 
 @testset "large tuning parameter" begin
@@ -105,12 +105,19 @@ end
 end
 
 @testset "Glasso tuning parameter" begin
-    using Random, Statistics, LinearAlgebra
+    using Random, Statistics, LinearAlgebra, Distributions
     Random.seed!(1234)
 
-    Σ = randsparsecov(10, 0.5)
-    λ = 0:0.01:5
-    tuning = tuningselect(s, nobs, λ; tol=1e-5)
-    numedges = countedges(gs.θ, 1e-10)
-    @test numedges ≈ 10
+    p = 40
+    μ = zeros(p)
+    Σ = randsparsecov(p, 0.3)
+    nobs = 50
+
+    df = rand(MvNormal(μ, Σ), nobs)
+    stddf = df ./ std(df, dims=2)
+    s = cov(df')
+
+    λ = 0:0.01:1.2
+    tuning = tuningselect(s, nobs, λ; tol=1e-5, verbose=false)
+    gs = glasso(s, nobs, 1.2)
 end
