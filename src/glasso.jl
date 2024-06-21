@@ -120,11 +120,11 @@ function randsparsecov(p, thr)
     s = randn(p, p)
     denseΣ = (s + s') / 2
 
-    preΣ = softthresh.(denseΣ, thr)
-    valsΣ = eigvals(preΣ)
-    vecsΣ = eigvecs(preΣ)
+    valsΣ = eigvals(denseΣ)
+    vecsΣ = eigvecs(denseΣ)
 
-    Σ = vecsΣ' * Diagonal(abs.(valsΣ)) * vecsΣ
+    unthreshΣ = vecsΣ' * Diagonal(abs.(valsΣ)) * vecsΣ
+    Σ = softthresh.(unthreshΣ, thr) + I
 
     return Σ
 end

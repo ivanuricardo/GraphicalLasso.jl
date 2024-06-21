@@ -40,9 +40,15 @@ end
     using Random
     Random.seed!(1234)
 
-    s = randsparsecov(10, 0.5)
+    s1 = randsparsecov(10, 0.5)
+    s2 = randsparsecov(20, 0.2)
+    s3 = randsparsecov(50, 0.5)
+    s4 = randsparsecov(100, 0.5)
 
-    @test all(eigvals(s) .> 0)
+    @test all(eigvals(s1) .> 0)
+    @test all(eigvals(s2) .> 0)
+    @test all(eigvals(s3) .> 0)
+    @test all(eigvals(s4) .> 0)
 end
 
 @testset "large tuning parameter" begin
@@ -99,11 +105,10 @@ end
 end
 
 @testset "Glasso tuning parameter" begin
-    using Random
+    using Random, Statistics, LinearAlgebra
     Random.seed!(1234)
-    nobs = 100
-    df = randn(nobs, 10)
-    Σ = cov(df)
+
+    Σ = randsparsecov(10, 0.5)
     λ = 0:0.01:5
     tuning = tuningselect(s, nobs, λ; tol=1e-5)
     numedges = countedges(gs.θ, 1e-10)
