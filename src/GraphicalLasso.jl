@@ -6,7 +6,12 @@ using Random
 using Distributions
 
 include("./glasso.jl")
-export softthresh, critfunc, countedges, bic, offdiag, randsparsecov
-export cdlasso, glasso, tuningselect, iscov
+export softthresh, cdlasso, glasso
+
+include("./utils.jl")
+export offdiag, randsparsecov, iscov
+
+include("./infocrit.jl")
+export critfunc, countedges, ebic, tuningselect
 
 end
