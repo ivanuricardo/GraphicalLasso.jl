@@ -4,7 +4,7 @@ countedges(x, thr) = sum(abs.(x) .> thr)
 offdiag(x) = x[findall(!iszero, ones(size(x)) - I)]
 
 function ebic(θ, ll, obs, thr, γ)
-    ebicpen = 4 * γ * countedges(θ, thr)
+    ebicpen = 4 * γ * countedges(θ, thr) * log(size(θ, 1))
     return -2 * ll + (log(obs) * countedges(θ, thr)) + ebicpen
 end
 
@@ -52,6 +52,7 @@ function glasso(
     obs::Int,
     λ::Real;
     penalizediag::Bool=true,
+    γ::Real=0.0,
     tol::Float64=1e-05,
     verbose::Bool=true,
     maxiter::Int=100,
@@ -94,7 +95,7 @@ function glasso(
 
     θ = inv(W)
     ll = -(obs / 2) * critfunc(s, θ, W; penalizediag)
-    bicval = bic(θ, ll, obs, 1e-06)
+    bicval = ebic(θ, ll, obs, 1e-06, γ)
 
     return (; W, θ, ll, bicval)
 end
@@ -144,15 +145,15 @@ function tuningselect(
     s::Matrix{Float64},
     obs::Int,
     λ::AbstractVector;
-    kwargs...
+    γ::Real=0.0
 )
     sortedλ = sort(λ)
-    W, θ, ll, bicval = glasso(s, obs, sortedλ[1], kwargs...)
+    W, θ, ll, bicval = glasso(s, obs, sortedλ[1]; γ)
     bicvec = fill(NaN, length(λ))
     bicvec[1] = bicval
 
     for i in 2:length(λ)
-        W, θ, ll, bicval = glasso(s, obs, sortedλ[i]; kwargs...)
+        W, θ, ll, bicval = glasso(s, obs, sortedλ[i]; γ)
         bicvec[i] = bicval
     end
 
