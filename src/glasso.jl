@@ -101,7 +101,6 @@ function tuningselect(
     λ::AbstractVector;
     kwargs...
 )
-
     sortedλ = sort(λ)
     W, θ, ll, bicval = glasso(s, obs, sortedλ[1]; kwargs...)
     bicvec = fill(NaN, length(λ))
@@ -117,4 +116,16 @@ function tuningselect(
 
 end
 
+function randsparsecov(p, thr)
+    s = randn(p, p)
+    denseΣ = (s + s') / 2
+
+    preΣ = softthresh.(denseΣ, thr)
+    valsΣ = eigvals(preΣ)
+    vecsΣ = eigvecs(preΣ)
+
+    Σ = vecsΣ' * Diagonal(abs.(valsΣ)) * vecsΣ
+
+    return Σ
+end
 

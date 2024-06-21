@@ -36,6 +36,15 @@ end
     @test all(eigvals(gs.θ) .> 0)
 end
 
+@testset "positive definite rand cov" begin
+    using Random
+    Random.seed!(1234)
+
+    s = randsparsecov(10, 0.5)
+
+    @test all(eigvals(s) .> 0)
+end
+
 @testset "large tuning parameter" begin
     using Random
     Random.seed!(1234)
@@ -87,4 +96,16 @@ end
     numedges = countedges(cdlassoβ, 1e-10)
 
     @test numedges ≈ 5
+end
+
+@testset "Glasso tuning parameter" begin
+    using Random
+    Random.seed!(1234)
+    nobs = 100
+    df = randn(nobs, 10)
+    Σ = cov(df)
+    λ = 0:0.01:5
+    tuning = tuningselect(s, nobs, λ; tol=1e-5)
+    numedges = countedges(gs.θ, 1e-10)
+    @test numedges ≈ 10
 end
