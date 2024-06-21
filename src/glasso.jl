@@ -1,8 +1,12 @@
 
 softthresh(x, λ) = sign.(x) .* max.(abs.(x) .- λ, 0)
 countedges(x, thr) = sum(abs.(x) .> thr)
-bic(θ, ll, obs, thr) = -2 * ll + (log(obs) * countedges(θ, thr)) / obs
 offdiag(x) = x[findall(!iszero, ones(size(x)) - I)]
+
+function ebic(θ, ll, obs, thr, γ)
+    ebicpen = 4 * γ * countedges(θ, thr)
+    return -2 * ll + (log(obs) * countedges(θ, thr)) + ebicpen
+end
 
 function critfunc(s, θ, rho; penalizediag=true)
     ψ = copy(θ)
@@ -129,8 +133,12 @@ function iscov(xx::AbstractMatrix{T}) where {T<:Real}
     return true
 end
 
-s = randsparsecov(10, 0.5)
-iscov(s)
+# using Distributions, Statistics, LinearAlgebra
+# p = 30
+# Σ = randsparsecov(p, 0.3)
+# iscov(Σ)
+# df = rand(MvNormal(zeros(p), Σ), 50)
+# s = cov(df')
 
 function tuningselect(
     s::Matrix{Float64},
