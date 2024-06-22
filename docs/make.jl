@@ -13,3 +13,7 @@ makedocs(
     ],
     modules=[GraphicalLasso]
 )
+
+deploydocs(
+    repo="github.com/ivanuricardo/GraphicalLasso.jl.git",
+)
