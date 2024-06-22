@@ -1,6 +1,15 @@
 using Documenter, GraphicalLasso
 
-makedocs(sitename="Graphical Lasso Documentation")
-deploydocs(
-    repo="github.com/ivanuricardo/GraphicalLasso.jl.git",
+push!(LOAD_PATH, "../src/")
+makedocs(
+    sitename="GraphicalLasso.jl",
+    format=Documenter.HTML(
+        prettyurls=get(ENV, "CI", nothing) == "true"
+    ),
+    pages=[
+        "Home" => [
+            "index.md"
+        ],
+    ],
+    modules=[GraphicalLasso]
 )
