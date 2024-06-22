@@ -11,3 +11,8 @@ Much of the code is based on the implementation of the graphical lasso in the `g
 However, we provide extended BIC for the selection of the tuning parameter and functions to generate a random sparse covariance matrix.
 
 ## Example Usage
+
+```julia
+using GraphicalLasso
+
+```
