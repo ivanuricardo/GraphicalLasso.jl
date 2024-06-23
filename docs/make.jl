@@ -1,6 +1,7 @@
 using Documenter, GraphicalLasso
 
 makedocs(
+    modules=[GraphicalLasso],
     sitename="GraphicalLasso.jl",
     format=Documenter.HTML(
         prettyurls=get(ENV, "CI", nothing) == "true"
