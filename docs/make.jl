@@ -1,6 +1,5 @@
 using Documenter, GraphicalLasso
 
-push!(LOAD_PATH, "../src/")
 makedocs(
     sitename="GraphicalLasso.jl",
     format=Documenter.HTML(
