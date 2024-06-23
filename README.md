@@ -39,21 +39,34 @@ Pkg.add(url="https://github.com/ivanuricardo/GraphicalLasso.jl")
 Here is an example of how to use this package to generate a sparse covariance matrix, apply the graphical lasso algorithm, and select the optimal tuning parameter:
 
 ```julia
-using LinearAlgebra
+using LinearAlgebra, GraphicalLasso, Random, Distributions
+Random.seed!(123456)
 
-# Generate a random sparse covariance matrix
-p = 5
-thr = 0.1
-sparse_cov = randsparsecov(p, thr)
+# Generate true sparse covariance matrix
+p = 20
+thr = 0.5
+Σ = randsparsecov(p, thr)
 
-# Number of observations
+# Check if this is a valid covariance matrix
+iscov(Σ)
+
+# Generate data from the true covariance matrix, create sample covariance matrix
 obs = 100
+μ = zeros(p)
+unstddf = rand(MvNormal(zeros(p), Σ), obs)
+df = unstddf ./ std(unstddf, dims=2)
+s = df * df' / obs
+
+# Select the optimal tuning parameter from a range
+λvalues = 0.0:0.01:2.0
+optimal_λ = tuningselect(s, obs, λvalues)
+println("Optimal λ: ", optimal_λ)
 
 # Regularization parameter
-λ = 0.2
+λ = 0.13
 
 # Apply the graphical lasso algorithm
-result = glasso(sparse_cov, obs, λ)
+result = glasso(s, obs, λ)
 
 # Extract results
 W = result.W
@@ -68,11 +81,6 @@ println("EBIC Value: ", bicval)
 # Validate if the result is a valid covariance matrix
 is_valid_cov = iscov(W)
 println("Is the estimated matrix a valid covariance matrix? ", is_valid_cov)
-
-# Select the optimal tuning parameter from a range
-λ_values = 0.1:0.1:1.0
-optimal_λ = tuningselect(sparse_cov, obs, λ_values)
-println("Optimal λ: ", optimal_λ)
 ```
 
 ## Contribution
