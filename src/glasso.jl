@@ -82,7 +82,7 @@ function glasso(
     if winit == zeros(size(s))
         W = Matrix(copy(s) + (penalizediag ? λ * I : zero(s)))
     else
-        W = Matrix(copy(winit)) + (penalizediag ? λ * I : zero(s)))
+        W = Matrix(copy(winit)) + (penalizediag ? λ * I : zero(s))
     end
 
     niter = 0
