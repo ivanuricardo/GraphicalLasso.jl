@@ -1,17 +1,23 @@
 # GraphicalLasso.jl
 
 [![Build Status](https://github.com/ivanuricardo/GraphicalLasso.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/ivanuricardo/GraphicalLasso.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ivanuricardo.github.io/GraphicalLasoo.jl/stable)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ivanuricardo.github.io/GraphicalLasso.jl/stable)
 [![codecov](https://codecov.io/gh/ivanuricardo/GraphicalLasso.jl/graph/badge.svg?token=f7OfqnmtEC)](https://codecov.io/gh/ivanuricardo/GraphicalLasso.jl)
 
-A package for the Graphical Lasso in Julia.
-We provide functions to solve the graphical lasso problem using coordinate descent and other related functionalities.
-Much of the code is based on the implementation of the graphical lasso in the `glasso` package in R.
-However, we provide extended BIC for the selection of the tuning parameter and functions to generate a random sparse covariance matrix.
+This package provides efficient tools for generating sparse covariance matrices, estimating sparse precision matrices using the graphical lasso (glasso) algorithm, and selecting optimal regularization parameters.
 
-## Example Usage
+## Key Features:
 
+- **Sparse Covariance Matrix Generation**: Generate random sparse covariance matrices with customizable sparsity thresholds.
+- **Graphical Lasso Implementation**: Apply the glasso algorithm to estimate sparse precision matrices from empirical covariance matrices.
+- **Extended Bayesian Information Criterion (EBIC)**: Calculate EBIC for model selection, supporting edge counting with thresholding.
+- **Tuning Parameter Selection**: Automatically select optimal regularization parameters for the glasso algorithm using EBIC.
+- **Covariance Matrix Validation**: Functions to check if a matrix is a valid covariance matrix (square, symmetric, positive semi-definite).
+
+## Installation
+
+To install this package, you can directly add the package github to the Julia package manager:
 ```julia
-using GraphicalLasso
-
+using Pkg;
 ```
+
