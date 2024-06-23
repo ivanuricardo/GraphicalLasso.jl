@@ -74,3 +74,12 @@ println("Is the estimated matrix a valid covariance matrix? ", is_valid_cov)
 optimal_λ = tuningselect(sparse_cov, obs, λ_values)
 println("Optimal λ: ", optimal_λ)
 ```
+
+## Contribution
+
+We welcome contributions to improve the package.
+If you encounter any issues or have suggestions for new features, feel free to open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/ivanuricardo/GraphicalLasso.jl/blob/main/LICENSE) file for details.
