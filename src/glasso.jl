@@ -17,8 +17,8 @@ Solves the coordinate descent Lasso problem.
 - `Vector{T}`: Solution vector `β`.
 """
 function cdlasso(
-    W11::Matrix{T},
-    s12::Vector{T},
+    W11::AbstractMatrix{T},
+    s12::AbstractVector{T},
     λ::Real;
     max_iter::Int=100,
     tol::T=1e-5) where {T<:Real}
@@ -67,7 +67,7 @@ Applies the graphical lasso (glasso) algorithm to estimate a sparse inverse cova
     - `bicval::Float64`: EBIC value of the estimate.
 """
 function glasso(
-    s::Matrix{Float64},
+    s::AbstractMatrix{Float64},
     obs::Int,
     λ::Real;
     penalizediag::Bool=true,
@@ -75,7 +75,7 @@ function glasso(
     tol::Float64=1e-05,
     verbose::Bool=true,
     maxiter::Int=100,
-    winit::Matrix{Float64}=zeros(size(s)),
+    winit::AbstractMatrix{Float64}=zeros(size(s)),
 )
 
     p = size(s, 1)
