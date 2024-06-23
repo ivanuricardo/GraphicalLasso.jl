@@ -69,7 +69,7 @@ Selects the optimal regularization parameter `λ` for the graphical lasso using 
 - `T`: The optimal regularization parameter from the input vector `λ`.
 """
 function tuningselect(
-    s::Matrix{Float64},
+    s::AbstractMatrix{Float64},
     obs::Int,
     λ::AbstractVector{T};
     γ::Real=0.0
