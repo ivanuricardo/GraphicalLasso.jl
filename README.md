@@ -54,7 +54,7 @@ iscov(Σ)
 obs = 100
 μ = zeros(p)
 unstddf = rand(MvNormal(zeros(p), Σ), obs)
-df = unstddf ./ std(unstddf, dims=2)
+df = (unstddf .- mean(unstddf, dims = 2)) ./ std(unstddf, dims=2)
 s = df * df' / obs
 
 # Select the optimal tuning parameter from a range
@@ -63,7 +63,7 @@ optimal_λ = tuningselect(s, obs, λvalues)
 println("Optimal λ: ", optimal_λ)
 
 # Regularization parameter
-λ = 0.13
+λ = 0.10
 
 # Apply the graphical lasso algorithm
 result = glasso(s, obs, λ)
