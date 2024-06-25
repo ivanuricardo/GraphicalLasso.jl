@@ -1,4 +1,4 @@
 using GraphicalLasso
-using Test, Statistics, LinearAlgebra
+using Test, Statistics, LinearAlgebra, Distributions
 
 include("./test-glasso.jl")

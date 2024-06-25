@@ -84,7 +84,7 @@ Moreover, although not the main focus of this package, we also provide a method 
 We demonstrate this method below with a generated data set and a sparse response vector.
 
 ```julia
-using LinearAlgebra, GraphicalLasso, Random
+using LinearAlgebra, GraphicalLasso, Random, Plots
 Random.seed!(123456)
 N = 100
 k = 100
@@ -95,7 +95,8 @@ beta[1:kzeros] .= 0
 betahat = zeros(k)
 y = X * beta + randn(N)
 
-cdlassobeta = cdlasso(X'X, X'y, 10.0)
+λ = 10.0
+cdlassobeta = cdlasso(X'X, X'y, λ)
 
 # We expect the last column to be dense.
 heatmap(reshape(cdlassobeta, 10, 10), yflip = true)
