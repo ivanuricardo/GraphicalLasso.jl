@@ -72,7 +72,8 @@ function tuningselect(
     s::AbstractMatrix{Float64},
     obs::Int,
     λ::AbstractVector{T};
-    γ::Real=0.0
+    γ::Real=0.0,
+    kwargs...
 ) where {T}
     sortedλ = sort(λ)
     p, _ = size(s)
@@ -81,13 +82,13 @@ function tuningselect(
     covarray = zeros(Float64, p, p, numλ)
     bicvec = Vector{Float64}(undef, numλ)
 
-    W, _, _, bicval = glasso(s, obs, sortedλ[1]; γ)
+    W, _, _, bicval = glasso(s, obs, sortedλ[1]; γ, kwargs...)
     bicvec[1] = bicval
     covarray[:, :, 1] = W
 
     for i in 2:numλ
         nextW = covarray[:, :, i-1]
-        glassoresult = glasso(s, obs, sortedλ[i]; γ, winit=nextW)
+        glassoresult = glasso(s, obs, sortedλ[i]; γ, winit=nextW, kwargs...)
         covarray[:, :, i] = glassoresult.W
         bicvec[i] = glassoresult.bicval
     end
