@@ -80,6 +80,27 @@ is_valid_cov = iscov(W)
 println("Is the estimated matrix a valid covariance matrix? ", is_valid_cov)
 ```
 
+Moreover, although not the main focus of this package, we also provide a method to compute the lasso solution via coordinate descent.
+We demonstrate this method below with a generated data set and a sparse response vector.
+
+```julia
+using LinearAlgebra, GraphicalLasso, Random
+Random.seed!(123456)
+N = 100
+k = 100
+kzeros = 90
+X = randn(N, k)
+beta = randn(k)
+beta[1:kzeros] .= 0
+betahat = zeros(k)
+y = X * beta + randn(N)
+
+cdlassobeta = cdlasso(X'X, X'y, 10.0)
+
+# We expect the last column to be dense.
+heatmap(reshape(cdlassobeta, 10, 10), yflip = true)
+```
+
 ## Contribution
 
 We welcome contributions to improve the package.
