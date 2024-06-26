@@ -4,13 +4,13 @@
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://ivanuricardo.github.io/GraphicalLasso.jl/stable)
 [![codecov](https://codecov.io/gh/ivanuricardo/GraphicalLasso.jl/graph/badge.svg?token=f7OfqnmtEC)](https://codecov.io/gh/ivanuricardo/GraphicalLasso.jl)
 
-This package provides efficient tools for generating sparse covariance matrices, estimating sparse precision matrices using the graphical lasso (glasso) algorithm, and selecting optimal regularization parameters.
+This package provides efficient tools for generating sparse covariance matrices, estimating sparse precision matrices using the graphical lasso (glasso) algorithm (Friedman, Hastie, and Tibshirani 2008; Meinshausen and Bühlmann 2006), and selecting optimal regularization parameters.
 
 ## Key Features:
 
 - **Sparse Covariance Matrix Generation**: Generate random sparse covariance matrices with customizable sparsity thresholds.
 - **Graphical Lasso (glasso) Implementation**: Apply the glasso algorithm to estimate sparse precision matrices from empirical covariance matrices.
-- **Extended Bayesian Information Criterion (EBIC)**: Calculate EBIC for model selection, supporting edge counting with thresholding.
+- **Extended Bayesian Information Criterion (EBIC)**: Calculate EBIC for model selection from Foygel and Drton (2010), supporting edge counting with thresholding.
 - **Tuning Parameter Selection**: Automatically select optimal regularization parameters for the glasso algorithm using EBIC.
 - **Covariance Matrix Validation**: Functions to check if a matrix is a valid covariance matrix (square, symmetric, positive semi-definite).
 
@@ -110,6 +110,12 @@ heatmap(reshape(cdlassobeta, 10, 10), yflip = true)
 
 We welcome contributions to improve the package.
 If you encounter any issues or have suggestions for new features, feel free to open an issue or submit a pull request.
+
+## References
+
+- Friedman, J., Hastie, T., & Tibshirani, R. (2008). Sparse inverse covariance estimation with the graphical lasso. Biostatistics, 9(3), 432-441.
+- Foygel, R., & Drton, M. (2010). Extended Bayesian information criteria for Gaussian graphical models. In Advances in Neural Information Processing Systems (pp. 604-612).
+- Meinshausen, N., & Bühlmann, P. (2006). High-dimensional graphs and variable selection with the lasso. The Annals of Statistics, 34(3), 1436-1462.
 
 ## License
 
