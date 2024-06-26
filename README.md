@@ -16,10 +16,14 @@ This package provides efficient tools for generating sparse covariance matrices,
 
 ## Installation
 
-To install this package, you can directly add the package GitHub to the Julia package manager:
+To install this package, first enter into Pkg mode by pressing `]` in the Julia REPL, then run the following command:
 ```julia
-using Pkg;
-Pkg.add(url="https://github.com/ivanuricardo/GraphicalLasso.jl")
+pkg> add GraphicalLasso
+```
+
+There is also the option to install the development version of this package directly from the GitHub repository:
+```julia
+pkg> add https://github.com/ivanuricardo/GraphicalLasso.jl
 ```
 
 ## Functions Included:
@@ -32,7 +36,7 @@ Pkg.add(url="https://github.com/ivanuricardo/GraphicalLasso.jl")
 - `critfunc(s, θ, rho; penalizediag=true)`: Computes the objective function for the graphical lasso.
 - `tuningselect(s, obs, λ; γ=0.0)`: Selects the optimal regularization parameter using EBIC.
 - `randsparsecov(p, thr)`: Generates a random sparse covariance matrix.
-- `iscov(xx)`: Checks if a matrix is a valid covariance matrix.
+- `iscov(x)`: Checks if a matrix is a valid covariance matrix.
 
 ## Example
 
@@ -90,7 +94,7 @@ N = 100
 k = 100
 kzeros = 90
 X = randn(N, k)
-beta = randn(k)
+beta = ones(k)
 beta[1:kzeros] .= 0
 betahat = zeros(k)
 y = X * beta + randn(N)

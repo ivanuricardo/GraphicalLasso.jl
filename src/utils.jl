@@ -27,29 +27,29 @@ function randsparsecov(p, thr)
 end
 
 """
-    iscov(xx::AbstractMatrix{T}) where {T<:Real}
+    iscov(x::AbstractMatrix{T}) where {T<:Real}
 
 Checks if a given matrix is a valid covariance matrix. A valid covariance matrix must be square, symmetric, and positive semi-definite.
 
 # Arguments
-- `xx::AbstractMatrix{T}`: Input matrix to check.
+- `x::AbstractMatrix{T}`: Input matrix to check.
 
 # Returns
 - `Bool`: `true` if the matrix is a valid covariance matrix, `false` otherwise.
 """
-function iscov(xx::AbstractMatrix{T}) where {T<:Real}
-    n, m = size(xx)
+function iscov(x::AbstractMatrix{T}) where {T<:Real}
+    n, m = size(x)
     if n != m
         @info "result is not square."
         return false
     end
 
-    if !issymmetric(xx)
+    if !issymmetric(x)
         @info "result is not symmetric."
         return false
     end
 
-    xxevals = eigvals(xx)
+    xxevals = eigvals(x)
     if any(xxevals .< 0)
         @info "result is not positive semi-definite."
         return false
